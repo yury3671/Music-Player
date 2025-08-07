@@ -1,0 +1,54 @@
+{
+  "name": "music-player",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --fix",
+    "format": "prettier --write src/",
+    "prepare": "husky install",
+    "lint-staged": "lint-staged"
+  },
+  "dependencies": {
+    "@liripeng/vue-audio-player": "^2.0.4",
+    "axios": "^1.10.0",
+    "element-plus": "^2.10.2",
+    "lodash": "^4.17.21",
+    "mitt": "^3.0.1",
+    "normalize.css": "^8.0.1",
+    "pinia": "^3.0.1",
+    "pinia-plugin-persistedstate": "^4.3.0",
+    "vant": "^4.9.20",
+    "vue": "^3.5.13",
+    "vue-router": "^4.5.0",
+    "vue-touch": "^2.0.0-beta.4",
+    "vue3-audio-player": "^1.0.7",
+    "vue3-marquee": "^4.2.2",
+    "vue3-touch-events": "^5.0.13"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.22.0",
+    "@ttou/postcss-px-to-viewport": "^2.0.4",
+    "@vitejs/plugin-vue": "^5.2.3",
+    "@vue/eslint-config-prettier": "^10.2.0",
+    "eslint": "^9.22.0",
+    "eslint-plugin-vue": "~10.0.0",
+    "globals": "^16.0.0",
+    "husky": "^8.0.0",
+    "lint-staged": "^16.1.2",
+    "postcss-px-to-viewport": "^1.1.1",
+    "prettier": "3.5.3",
+    "unplugin-auto-import": "^19.3.0",
+    "unplugin-vue-components": "^28.7.0",
+    "vite": "^6.2.4",
+    "vite-plugin-vue-devtools": "^7.7.2"
+  },
+  "lint-staged": {
+    "*.{js,ts,vue}": [
+      "eslint --fix"
+    ]
+  }
+}
