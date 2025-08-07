@@ -12,14 +12,15 @@ const login = () => {
 const likeSongs = ref({})
 const getInfo = async () => {
   const res = await userSong()
+  console.log(res)
   likeSongs.value = res.data.data.info[1]
 }
 const isLogin = ref(false)
 onMounted(() => {
-  if (document.cookie.split('=')[1] !== 'undefined') {
-    isLogin.value = true
-    getInfo()
-  }
+  // if (document.cookie.split('=')[1] !== 'undefined') {
+  isLogin.value = true
+  getInfo()
+  // }
 })
 //跳转到歌单
 const goList = (id) => {
