@@ -29,6 +29,7 @@ watch(
   async () => {
     if (audioStore.hash) {
       const res = await songUrl(audioStore.hash)
+
       url.value = res.data.url[0]
     } else {
       url.value = ''
