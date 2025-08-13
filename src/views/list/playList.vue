@@ -6,15 +6,13 @@ import { debounce } from 'lodash'
 import { useAudioStore } from '@/stores'
 
 const audioStore = useAudioStore()
-defineOptions({
-  name: 'Collection', // 必须设置
-})
+audioStore.setPos(0)
+
 const info = ref([])
 const route = useRoute()
 const router = useRouter()
 const page = ref(1)
-let lastId = route.params.id
-const scrollPos = ref(0)
+
 const total = ref(0)
 const getAll = async () => {
   if (route.params.id !== '0') {
@@ -32,27 +30,9 @@ const getAll = async () => {
   page.value += 1
 }
 getAll()
-// 恢复滚动位置
-const containerRef = ref(null)
-onActivated(() => {
-  if (route.params.id !== lastId) {
-    total.value = 0
-    lastId = route.params.id
-    scrollPos.value = 0
-    page.value = 1
-    info.value = []
-    getAll()
-  } else {
-    if (containerRef.value) {
-      containerRef.value.scrollTop = scrollPos.value
-    }
-  }
-  audioStore.setPos(0)
-})
 
 //懒加载
 const handleScroll = debounce(async (event) => {
-  scrollPos.value = event.target.scrollTop
   const bottomReached =
     event.target.scrollHeight - event.target.scrollTop === event.target.clientHeight
   if (bottomReached) {
@@ -69,7 +49,7 @@ const setList = (num) => {
 </script>
 
 <template>
-  <div class="container box" @scroll="handleScroll" ref="containerRef">
+  <div class="box">
     <van-nav-bar
       :title="route.params.id !== '0' ? '我的收藏' : '最近播放'"
       left-arrow
@@ -85,15 +65,23 @@ const setList = (num) => {
       <van-icon name="play-circle" size="25" color="skyblue" @click="setList(1)" />
       <span>全部播放 {{ total ? `(${total})` : '' }}</span>
     </div>
-    <div @click="setList(0)">
-      <one-song
-        v-for="(item, index) in info"
-        :key="index"
-        :songInfo="item"
-        :flag="route.params.id !== '0' ? 2 : 1"
-        v-show="item.name"
-      ></one-song>
-    </div>
+
+    <virtual-list1
+      :list="info"
+      :itemHeight="60"
+      :buffer="2"
+      @scroll="handleScroll"
+      @click="setList(0)"
+    >
+      <template #default="{ items }">
+        <one-song
+          v-for="item in items"
+          :key="item.hash"
+          :songInfo="item"
+          :flag="route.params.id !== '0' ? 2 : 1"
+        ></one-song>
+      </template>
+    </virtual-list1>
   </div>
 </template>
 
@@ -108,5 +96,11 @@ const setList = (num) => {
 .box {
   margin-top: 46px;
   padding-bottom: 50px;
+}
+.item {
+  height: 54px;
+  line-height: 54px;
+  text-align: center;
+  border: 1px solid #000;
 }
 </style>

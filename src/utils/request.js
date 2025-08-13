@@ -2,7 +2,7 @@ import axios from 'axios'
 import { ElMessage } from 'element-plus'
 import router from '@/router'
 
-const baseURL = 'https://ku-gou-music-api-blond.vercel.app'
+const baseURL = 'http://localhost:3000/'
 const instance = axios.create({
   baseURL, //基地址
   timeout: 10000, //超时时间

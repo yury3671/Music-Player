@@ -17,10 +17,10 @@ const getInfo = async () => {
 }
 const isLogin = ref(false)
 onMounted(() => {
-  // if (document.cookie.split('=')[1] !== 'undefined') {
-  isLogin.value = true
-  getInfo()
-  // }
+  if (document.cookie.split('=')[1] !== 'undefined') {
+    isLogin.value = true
+    getInfo()
+  }
 })
 //跳转到歌单
 const goList = (id) => {

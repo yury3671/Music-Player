@@ -29,20 +29,23 @@ const handleScroll = debounce(async (event) => {
 </script>
 
 <template>
-  <div class="container box" @scroll="handleScroll">
+  <div class="box">
     <search-bar
       @hide="isHide = false"
       @show="isHide = true"
       :content="route.params.keywords"
     ></search-bar>
     <div class="content" v-show="isHide">
-      <one-song
-        v-for="(item, index) in info"
-        :key="index"
-        :songInfo="item"
-        :flag="2"
-        v-show="item.OriSongName"
-      ></one-song>
+      <virtual-list1 :list="info" :itemHeight="60" :buffer="2" @scroll="handleScroll">
+        <template #default="{ items }">
+          <one-song
+            v-for="item in items"
+            :key="item.FileHash"
+            :songInfo="item"
+            :flag="2"
+          ></one-song>
+        </template>
+      </virtual-list1>
     </div>
   </div>
 </template>
@@ -53,7 +56,12 @@ const handleScroll = debounce(async (event) => {
   padding-bottom: 50px;
 }
 .content {
-  margin-top: 60px;
-  height: 500px;
+  margin-top: 54px;
+}
+.item {
+  height: 60px;
+  line-height: 60px;
+  text-align: center;
+  border: 1px solid #000;
 }
 </style>

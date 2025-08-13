@@ -74,7 +74,7 @@ const setList = (num) => {
     <div class="songs" @click="setList(0)">
       <one-song
         v-for="(item, index) in info"
-        :key="index"
+        :key="item.hash"
         :songInfo="item"
         :flag="1"
         v-show="item.filename"

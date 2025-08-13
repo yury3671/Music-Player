@@ -9,7 +9,7 @@ const router = useRouter()
 const emit = defineEmits(['close', 'toggle'])
 
 const audioStore = useAudioStore()
-
+const listRef = ref(null)
 const activeURL = ref('')
 const list = ref([])
 const page = ref(1)
@@ -41,17 +41,12 @@ const initInfo = () => {
   }
 }
 defineExpose({ initInfo })
-const showReply = async (index) => {
-  const res = await floorComment(
-    list.value[index].special_child_id,
-    mixsongid,
-    list.value[index].id,
-    list.value[index].childPage,
-    5,
-  )
+const showReply = async (id) => {
+  const target = list.value.find((item) => item.id === id)
+  const res = await floorComment(target.special_child_id, mixsongid, target.id, target.childPage, 5)
   console.log(res)
-  list.value[index].childPage += 1
-  list.value[index].childList.push(...res.data.list)
+  target.childPage += 1
+  target.childList.push(...res.data.list)
 }
 //懒加载
 const handleScroll = debounce(async (event) => {
@@ -59,6 +54,9 @@ const handleScroll = debounce(async (event) => {
     event.target.scrollHeight - event.target.scrollTop <= event.target.clientHeight + 1
   if (bottomReached) {
     await getInfo()
+    if (listRef.value) {
+      listRef.value.initData()
+    }
   }
 }, 200)
 </script>
@@ -68,33 +66,42 @@ const handleScroll = debounce(async (event) => {
     <van-image :src="activeURL" radius="5" />
   </div>
 
-  <div v-show="!activeURL" class="content" @scroll="handleScroll">
+  <div v-show="!activeURL">
     <van-nav-bar :title="`评论(${total})`" left-arrow @click-left="emit('close')" fixed />
-    <div>
-      <div v-for="(item, index) in list" :key="item.id">
-        <one-comment
-          :info="item"
-          @clickImg="activeURL = item.images[0].url"
-          :flag="0"
-        ></one-comment>
+    <virtual-list2
+      v-if="list.length"
+      :list="list"
+      :estimatedHeight="60"
+      :buffer="2"
+      @scroll="handleScroll"
+      ref="listRef"
+    >
+      <template #default="{ items }">
+        <div v-for="(item, index) in items" :key="item.id">
+          <one-comment
+            :info="item"
+            @clickImg="activeURL = item.images[0].url"
+            :flag="0"
+          ></one-comment>
 
-        <one-comment
-          v-for="child in item.childList"
-          :key="child.id"
-          :info="child"
-          :name="item.user_name"
-          @clickImg="activeURL = child.images[0].url"
-          :flag="1"
-        ></one-comment>
-        <div class="reply" v-if="item.reply_num && item.childList.length < item.reply_num">
-          <hr />
-          <span style="line-height: 1" @click="showReply(index)"
-            >展开{{ item.childList.length ? '更多' : `${item.reply_num}条` }}回复<van-icon
-              name="arrow-down"
-          /></span>
+          <one-comment
+            v-for="child in item.childList"
+            :key="child.id"
+            :info="child"
+            :name="item.user_name"
+            @clickImg="activeURL = child.images[0].url"
+            :flag="1"
+          ></one-comment>
+          <div class="reply" v-if="item.reply_num && item.childList.length < item.reply_num">
+            <hr />
+            <span style="line-height: 1" @click="showReply(item.id)"
+              >展开{{ item.childList.length ? '更多' : `${item.reply_num}条` }}回复<van-icon
+                name="arrow-down"
+            /></span>
+          </div>
         </div>
-      </div>
-    </div>
+      </template>
+    </virtual-list2>
   </div>
 </template>
 
@@ -132,23 +139,6 @@ hr {
   word-break: break-all;
 }
 
-.content {
-  box-sizing: border-box;
-  padding-top: 46px;
-  letter-spacing: 1px;
-  /* background-color: aqua; */
-  margin-top: 0px;
-}
-.content {
-  height: 664px;
-
-  overflow-y: auto; /* 内容溢出时显示滚动条，用于触发滚动功能 */
-  scrollbar-width: none; /* Firefox 专属属性，隐藏滚动条 */
-  -ms-overflow-style: none; /* IE 和 Edge 专属，隐藏滚动条 */
-}
-.content::-webkit-scrollbar {
-  display: none;
-}
 ::v-deep .van-icon-arrow-left {
   color: black;
 }

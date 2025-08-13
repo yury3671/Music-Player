@@ -39,11 +39,7 @@ watch(
 </script>
 
 <template>
-  <router-view v-slot="{ Component }">
-    <keep-alive :include="['Collection']">
-      <component :is="Component" />
-    </keep-alive>
-  </router-view>
+  <router-view> </router-view>
 
   <audio
     :src="url"

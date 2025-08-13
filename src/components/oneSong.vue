@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, computed, watch } from 'vue'
 import { useAudioStore } from '@/stores'
 import { useRouter } from 'vue-router'
 import { detailInfo } from '@/api/music'
@@ -20,8 +20,8 @@ const processCoverUrl = (url) => {
 const like = () => {
   isLike.value = !isLike.value
 }
-const songName = ref('')
-const authorName = ref('')
+const songName = ref('未知')
+const authorName = ref('未知')
 const cover = ref('')
 const props = defineProps({ songInfo: Object, flag: Number, hash: String, mixsongid: String })
 const hash = ref('')
@@ -30,6 +30,12 @@ const showLike = ref(false)
 const showPlay = ref(false)
 const songRef = ref(null)
 // console.log(props.songInfo)
+// const songName1 = computed(() => {
+//   if (props.songInfo.name) {
+//     const idx = props.songInfo.name.indexOf(' - ')
+//     return props.songInfo.name.slice(idx + 3)
+//   }
+// })
 if (props.flag === 1) {
   if (props.songInfo.songname) {
     songName.value = props.songInfo.songname
@@ -93,6 +99,74 @@ if (props.flag === 1) {
     songName.value = res.data.data[0].name.slice(idx + 3)
   })
 }
+// watch(
+//   () => props.songInfo,
+//   () => {
+//     if (props.flag === 1) {
+//       if (props.songInfo.songname) {
+//         songName.value = props.songInfo.songname
+//       }
+//       if (props.songInfo.author_name) {
+//         authorName.value = props.songInfo.author_name
+//       }
+//       if (props.songInfo.name) {
+//         showPlay.value = true
+//         songName.value = props.songInfo.name
+//       }
+//       if (props.songInfo.singername) {
+//         authorName.value = props.songInfo.singername
+//       }
+//       hash.value = props.songInfo.hash
+//       mixsongid.value = props.songInfo.mixsongid
+//       if (props.songInfo.sizable_cover) {
+//         cover.value = processCoverUrl(props.songInfo.sizable_cover)
+//       }
+//       if (props.songInfo.album_sizable_cover) {
+//         cover.value = processCoverUrl(props.songInfo.album_sizable_cover)
+//       }
+
+//       if (props.songInfo.cover || props.songInfo.trans_param.union_cover) {
+//         cover.value = props.songInfo.cover
+//           ? processCoverUrl(props.songInfo.cover)
+//           : processCoverUrl(props.songInfo.trans_param.union_cover)
+//       }
+//     } else if (props.flag === 2) {
+//       if (props.songInfo.name) {
+//         const idx = props.songInfo.name.indexOf(' - ')
+//         authorName.value = props.songInfo.name.slice(0, idx)
+//         songName.value = props.songInfo.name.slice(idx + 3)
+//         cover.value = props.songInfo.cover ? processCoverUrl(props.songInfo.cover) : ''
+//         hash.value = props.songInfo.hash
+//         mixsongid.value = props.songInfo.mixsongid
+//       }
+//       if (props.songInfo.FileName) {
+//         showLike.value = true
+//         const idx = props.songInfo.FileName.indexOf(' - ')
+//         authorName.value = props.songInfo.FileName.slice(0, idx)
+//         songName.value = props.songInfo.FileName.slice(idx + 3)
+//         cover.value = props.songInfo.Image
+//           ? processCoverUrl(props.songInfo.Image)
+//           : processCoverUrl(props.songInfo.trans_param.union_cover)
+//         hash.value = props.songInfo.FileHash
+//         mixsongid.value = props.songInfo.MixSongID
+//       }
+//     } else {
+//       onMounted(async () => {
+//         hash.value = props.hash
+//         mixsongid.value = props.mixsongid
+//         const res = await detailInfo(props.hash)
+//         if (res.data.data[0].info.image) {
+//           cover.value = processCoverUrl(res.data.data[0].info.image)
+//         } else {
+//           cover.value = processCoverUrl(res.data.data[0].trans_param.union_cover)
+//         }
+//         const idx = res.data.data[0].name.indexOf(' - ')
+//         authorName.value = res.data.data[0].name.slice(0, idx)
+//         songName.value = res.data.data[0].name.slice(idx + 3)
+//       })
+//     }
+//   },
+// )
 
 const handleClick = () => {
   // audioStore.addList(hash.value, mixsongid.value)
@@ -116,7 +190,7 @@ const addList = () => {
 </script>
 
 <template>
-  <div class="song" @click="handleClick" v-if="hash && mixsongid" ref="songRef">
+  <div class="song" @click="handleClick" ref="songRef">
     <div class="box">
       <van-image
         width="50px"
@@ -161,6 +235,12 @@ const addList = () => {
 </template>
 
 <style scoped>
+.item {
+  height: 60px;
+  line-height: 54px;
+  text-align: center;
+  border: 1px solid #000;
+}
 .box {
   position: relative;
 }
@@ -206,11 +286,11 @@ const addList = () => {
   }
 }
 .song {
+  height: 60px;
   display: flex;
   align-items: center;
   justify-content: space-evenly;
   padding-right: 10px;
-  margin-bottom: 10px;
 
   width: 100%;
 }
