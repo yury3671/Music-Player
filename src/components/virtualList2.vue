@@ -144,7 +144,7 @@ const handleScroll = (e) => {
   margin-top: 0px;
 }
 .content {
-  height: 664px;
+  height: 665px;
 
   overflow-y: auto; /* 内容溢出时显示滚动条，用于触发滚动功能 */
   scrollbar-width: none; /* Firefox 专属属性，隐藏滚动条 */

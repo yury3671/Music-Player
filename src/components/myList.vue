@@ -5,13 +5,13 @@ import { showConfirmDialog } from 'vant'
 const audioStore = useAudioStore()
 const dialogVisible = ref(false)
 const show = ref(false)
-const songsRef = ref([])
+const songsRef = ref({})
 const open = async () => {
   show.value = true
-  const index = audioStore.musicList.findIndex((item) => item.hash === audioStore.hash)
+
   await nextTick()
-  if (songsRef.value[index]) {
-    songsRef.value[index].$el.scrollIntoView({
+  if (songsRef.value[audioStore.hash]) {
+    songsRef.value[audioStore.hash].$el.scrollIntoView({
       behavior: 'smooth',
       block: 'center',
     })
@@ -53,7 +53,11 @@ defineExpose({ open })
       >
       </van-dialog>
       <one-song
-        ref="songsRef"
+        :ref="
+          (el) => {
+            if (el) songsRef[item.hash] = el
+          }
+        "
         v-for="item in audioStore.musicList"
         :key="item.hash"
         :hash="item.hash"

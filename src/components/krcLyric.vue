@@ -16,7 +16,9 @@ const useScroll = ref(false)
 const scrollEndTimer = ref(null)
 // 处理滚动事件
 const handleScroll = () => {
+  //如果自动滚动
   if (isScroll.value) return
+  //手动滚动
   useScroll.value = true
 
   // 清除之前的定时器
@@ -33,14 +35,16 @@ const handleScroll = () => {
 const isLineActive = (lineIndex) => {
   const line = parsedLyrics.value[lineIndex]
   const currentMs = audioStore.currentTime * 1000
+  //如果正在播放当前行并且没有手动滑动
   if (currentMs >= line.start && currentMs < line.end && !useScroll.value) {
-    scrollToLine(lineIndex)
+    scrollToLine(lineIndex) //自动往下滚动
   }
   return currentMs >= line.start && currentMs < line.end
 }
 //滚动函数
 const linesRef = ref(null)
 const scrollToLine = (index) => {
+  //自动滚动
   isScroll.value = true
   nextTick(() => {
     if (linesRef.value[index]) {
@@ -61,21 +65,23 @@ const scrollToLine = (index) => {
 const handleLineClick = (index) => {
   const line = parsedLyrics.value[index]
   audioStore.setCurrentTime(line.start / 1000)
-  useScroll.value = false
+  useScroll.value = false //手动滚动结束立即跳转
 }
 //更新中间行时间
 const centerLineIndex = ref()
 const updateCenterIndex = () => {
   const container = containerRef.value
 
-  const containerRect = containerRef.value.getBoundingClientRect()
+  const containerRect = container.getBoundingClientRect()
 
   const containerHeight = container.clientHeight
   // 找出最接近中间的行
   let closestLine = null
   let minDistance = Infinity
+  //遍历每行计算每行到可视区域中央的距离
   linesRef.value.forEach((line, index) => {
     const lineRect = line.getBoundingClientRect()
+    //计算行中央到可视区域顶部的距离
     const lineCenter = lineRect.top + lineRect.height / 2 - containerRect.top
     const distance = Math.abs(lineCenter - containerHeight / 2)
 

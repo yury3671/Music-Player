@@ -21,9 +21,9 @@ defineExpose({ open })
   height: 667px;
   /* 使用CSS变量存储角度 */
   /* --angle: 200deg; */
-  background-image: linear-gradient(var(--angle), white 60%, #dfc2eb 100%);
-  transition: --angle 0.1s ease; /* 平滑过渡角度变化 */
-  animation: bgmove 4s infinite ease-in-out;
+  background-image: linear-gradient(white 70%, #dfc2eb 100%);
+  /* transition: --angle 0.1s ease; /* 平滑过渡角度变化  */
+  /* animation: bgmove 4s infinite ease-in-out;  */
 }
 
 @keyframes bgmove {

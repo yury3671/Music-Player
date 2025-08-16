@@ -31,12 +31,18 @@ const getAll = async () => {
 }
 getAll()
 
-//懒加载
+//加载更多数据
 const handleScroll = debounce(async (event) => {
   const bottomReached =
     event.target.scrollHeight - event.target.scrollTop === event.target.clientHeight
   if (bottomReached) {
-    await getAll()
+    if (route.params.id !== '0') {
+      if (info.value.length < total.value) {
+        await getAll()
+      }
+    } else {
+      await getAll()
+    }
   }
 }, 200)
 //设置播放列表

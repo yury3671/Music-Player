@@ -18,7 +18,7 @@ getInfo()
 
 //删除历史记录
 const isFold = ref(true)
-const flag = ref(1)
+const flag = ref(1) //1表示正常状态，2为删除状态
 const del = () => {
   flag.value = 2
   isShow.value = false
@@ -38,7 +38,7 @@ const act = (index, value) => {
     searchRef.value.setContent(value)
   }
 }
-const isShow = ref(false)
+const isShow = ref(false) //是否显示展开折叠箭头
 const hisRef = ref()
 const showMore = async () => {
   await nextTick()
@@ -60,6 +60,7 @@ watch(
 )
 //显示弹出框
 const show = ref(false)
+//删除完成
 const recover = () => {
   flag.value = 1
   isFold.value = true
@@ -95,14 +96,8 @@ const isHide = ref(true)
             </span>
           </div>
         </div>
-        <van-icon
-          name="arrow-down"
-          class="bot"
-          v-show="isShow"
-          @click="isFold = false"
-          v-if="isFold === true"
-        />
-        <van-icon name="arrow-up" class="bot" v-show="isShow" @click="isFold = true" v-else />
+        <van-icon name="arrow-down" class="bot" v-show="isShow && isFold" @click="isFold = false" />
+        <van-icon name="arrow-up" class="bot" v-show="isShow && !isFold" @click="isFold = true" />
       </div>
       <div class="hot">
         <van-swipe :loop="false" :width="260" :show-indicators="false">

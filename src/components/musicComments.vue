@@ -19,7 +19,7 @@ let mixsongid = audioStore.mixsongid
 
 const getInfo = async () => {
   const res = await musicComment(mixsongid, page.value)
-
+  console.log(res)
   total.value = res.data.count
   // 正确使用map返回新对象
   const newItems = res.data.list.map((item) => ({
@@ -54,7 +54,7 @@ const handleScroll = debounce(async (event) => {
     event.target.scrollHeight - event.target.scrollTop <= event.target.clientHeight + 1
   if (bottomReached) {
     await getInfo()
-    if (listRef.value) {
+    if (listRef.value && list.value.length < total.value) {
       listRef.value.initData()
     }
   }

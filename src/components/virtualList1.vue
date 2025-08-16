@@ -30,11 +30,11 @@ const scrollStyle = computed(() => {
   }
 })
 const virtualList = computed(() => {
-  console.log(startIndex.value)
+  // console.log(startIndex.value)
   const finialStart = Math.max(0, startIndex.value - props.buffer)
   const numVisible = Math.floor(containerHeight.value / props.itemHeight)
   const finialEnd = Math.min(props.list.length, startIndex.value + numVisible + props.buffer)
-  console.log(props.list.slice(finialStart, finialEnd))
+  // console.log(props.list.slice(finialStart, finialEnd))
   // console.log(finialEnd)
   return props.list.slice(finialStart, finialEnd)
 })

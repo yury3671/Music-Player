@@ -7,7 +7,7 @@ const props = defineProps({
   line: Object,
 })
 
-//检查字是否激活
+//检查一行之中已经激活的所有字
 const progress = ref(0)
 const isWordActive = (wordIndex) => {
   // const line = parsedLyrics.value[lineIndex]
@@ -16,6 +16,7 @@ const isWordActive = (wordIndex) => {
   const currentMs = audioStore.currentTime * 1000
   return currentMs > word.end && currentMs < props.line.end
 }
+//检查单个字是否激活
 const isWordActiving = (wordIndex) => {
   // const line = parsedLyrics.value[lineIndex]
   // console.log(line)

@@ -108,7 +108,7 @@ const parsedLyrics = computed(() => {
   // console.log(parseKrc(props.decodeContent))
   return parseKrc(decodeContent.value)
 })
-//获取正在播放的lineIndex
+//获取正在播放的line
 const currentLine = computed(() => {
   if (!parsedLyrics.value.length) return -1
 
@@ -250,7 +250,7 @@ const toggle = async (num) => {
   <van-popup
     v-model:show="show"
     position="right"
-    :style="{ height: '664px', width: '375px' }"
+    :style="{ height: '665px', width: '375px' }"
     teleport="body"
     class="pop"
     :overlay="false"
@@ -320,7 +320,7 @@ const toggle = async (num) => {
 }
 
 .cover {
-  height: 375px;
+  height: 370px;
   background-position: center;
   background-size: cover;
   box-shadow:

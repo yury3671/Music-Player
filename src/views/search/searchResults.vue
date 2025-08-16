@@ -11,9 +11,11 @@ const route = useRoute()
 const isHide = ref(true)
 const info = ref([])
 const page = ref(1)
+const total = ref(0)
 const getInfo = async () => {
   const res = await search(route.params.keywords, page.value)
   console.log(res)
+  total.value = res.data.data.total
   info.value.push(...res.data.data.lists)
   page.value += 1
 }
@@ -22,7 +24,7 @@ getInfo()
 const handleScroll = debounce(async (event) => {
   const bottomReached =
     event.target.scrollHeight - event.target.scrollTop === event.target.clientHeight
-  if (bottomReached) {
+  if (bottomReached && info.value.length < total.value) {
     await getInfo()
   }
 }, 200)
